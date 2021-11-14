@@ -55,7 +55,7 @@
 
 // TODO 사용자 경험
 // - [X] API 통신이 실패하는 경우에 대해 사용자가 알 수 있게 alert으로 예외처리를 진행한다.
-// - [] 중복되는 메뉴는 추가할 수 없다.
+// - [X] 중복되는 메뉴는 추가할 수 없다.
 
 
 import { $ } from './utils/dom.js';
@@ -129,7 +129,6 @@ function App() {
     const duplicatedItem = this.menu[this.currentCategory].find(
       (item) => item.name === $('#menu-name').value
     );
-    console.log(duplicatedItem)
 
     if (duplicatedItem) {
       alert('이미 등록된 메뉴입니다. 다시 입력해주세요.');
