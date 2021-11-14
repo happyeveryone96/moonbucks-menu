@@ -42,7 +42,7 @@
 
 // step3 요구사항 분석
 // TODO 서버 요청 부분
-// - [] 웹 서버를 띄운다.
+// - [X] 웹 서버를 띄운다.
 // - [] 서버에 새로운 메뉴명이 추가될 수 있도록 요청한다.
 // - [] 서버에 카테고리별 메뉴 리스트를 불러온다.
 // - [] 서버에 메뉴가 수정될 수 있도록 요청한다.
@@ -57,6 +57,7 @@
 // - [] API 통신이 실패하는 경우에 대해 사용자가 알 수 있게 alert으로 예외처리를 진행한다.
 // - [] 중복되는 메뉴는 추가할 수 없다.
 
+const BASE_URL = 'http://localhost:3000/api'
 
 import { $ } from './utils/dom.js';
 import store from './store/index.js';
@@ -122,7 +123,19 @@ function App() {
     }
 
     const menuName = $('#menu-name').value;
-    this.menu[this.currentCategory].push({ name: menuName });
+
+    fetch(`${BASE_URL}/category/${this.currentCategory}/menu`, {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/json',
+      },
+      body: JSON.stringify({name: menuName}),
+    }).then((response) => {
+      return response.json()
+    }).then((data) => {
+      console.log(data);
+    });
+    // this.menu[this.currentCategory].push({ name: menuName });
     store.setLocalStorage(this.menu);
     render();
     $('#menu-name').value = '';
