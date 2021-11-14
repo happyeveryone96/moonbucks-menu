@@ -43,7 +43,7 @@
 // step3 요구사항 분석
 // TODO 서버 요청 부분
 // - [X] 웹 서버를 띄운다.
-// - [] 서버에 새로운 메뉴명이 추가될 수 있도록 요청한다.
+// - [X] 서버에 새로운 메뉴명이 추가될 수 있도록 요청한다.
 // - [] 서버에 카테고리별 메뉴 리스트를 불러온다.
 // - [] 서버에 메뉴가 수정될 수 있도록 요청한다.
 // - [] 서버에 메뉴의 품절상태를 토글될 수 있도록 요청한다.
@@ -116,7 +116,7 @@ function App() {
     $('.menu-count').innerText = `총 ${menuCount}개`;
   }
 
-  const addMenuName = () => {
+  const addMenuName = async () => {
     if ($('#menu-name').value === '') {
       alert('값을 입력해주세요.');
       return;
@@ -124,7 +124,7 @@ function App() {
 
     const menuName = $('#menu-name').value;
 
-    fetch(`${BASE_URL}/category/${this.currentCategory}/menu`, {
+    await fetch(`${BASE_URL}/category/${this.currentCategory}/menu`, {
       method: 'POST',
       headers: {
         'Content-Type':'application/json',
@@ -132,13 +132,18 @@ function App() {
       body: JSON.stringify({name: menuName}),
     }).then((response) => {
       return response.json()
-    }).then((data) => {
-      console.log(data);
     });
-    // this.menu[this.currentCategory].push({ name: menuName });
-    store.setLocalStorage(this.menu);
-    render();
-    $('#menu-name').value = '';
+
+    await fetch(`${BASE_URL}/category/${this.currentCategory}/menu`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        this.menu[this.currentCategory] = data;
+        render();
+        $('#menu-name').value = '';
+      })
+  
   }
 
   const updateMenuName = (e) => {
